@@ -82,29 +82,4 @@ int spread(vector<vector<int>>& f) {
         return -1;
 }
 
-int main() {
 
-    // Example 1: expected output 4
-    vector<vector<int>> forest1 = {
-        {2, 1, 1},
-        {1, 1, 0},
-        {0, 1, 1}
-    };
-    cout << "Example 1: " << spread(forest1) << endl;
-
-    // Example 2: expected output -1
-    vector<vector<int>> forest2 = {
-        {2, 1, 1},
-        {0, 1, 1},
-        {1, 0, 0}
-    };
-    cout << "Example 2: " << spread(forest2) << endl;
-
-    // Example 3: expected output 0
-    vector<vector<int>> forest3 = {
-        {0, 2}
-    };
-    cout << "Example 3: " << spread(forest3) << endl;
-
-    return 0;
-}
