@@ -1,0 +1,110 @@
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+
+int spread(vector<vector<int>>& f) {
+
+    // Array for down, up, right, left
+    vector<pair<int,int>> dirc = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+
+    // Row and Cols of the forest
+    int rows = f.size();
+    int cols = f[0].size();
+
+    // q = init queue
+    queue<pair<int,int>> q;
+
+    // Number of healthy trees and count of the days
+    int numHealth = 0;
+    int countDay  = 0;
+
+    // Count of all the healthy trees and then collect all burned at first
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            if (f[r][c] == 2)
+                q.push({r, c});
+            else if (f[r][c] == 1)
+                numHealth++;
+        }
+    }
+
+    // No healthy trees then return 0
+    if (numHealth == 0) {
+        return 0;
+    }
+
+    // All healthy trees and no burned then return -1
+    if (q.empty()) {
+        return -1;
+    }
+
+    // Using the Breadth First Search to simulate the fire spreading day by day
+    while (!q.empty()) {
+        // Let size = size of q
+        int  size   = q.size();
+        // Bool to see if the forest is burning
+        bool burned = false;
+
+        for (int i = 0; i < size; i++) {
+            int r = q.front().first;
+            int c = q.front().second;
+            q.pop();
+
+            for (int d = 0; d < (int)dirc.size(); d++) {
+                int dr = dirc[d].first;
+                int dc = dirc[d].second;
+                int newR = r + dr;
+                int newC = c + dc;
+
+                // If both newR and newC are inside the grid and the cell is healthy
+                if (newR >= 0 && newR < rows &&
+                    newC >= 0 && newC < cols &&
+                    f[newR][newC] == 1) {
+
+                    f[newR][newC] = 2;
+                    q.push({newR, newC});
+                    numHealth--;
+                    burned = true;
+                }
+            }
+        }
+
+        if (burned) {
+            countDay++;
+        }
+    }
+
+    // Check if all healthy trees are burned or not
+    if (numHealth == 0)
+        return countDay;
+    else
+        return -1;
+}
+
+int main() {
+
+    // Example 1: expected output 4
+    vector<vector<int>> forest1 = {
+        {2, 1, 1},
+        {1, 1, 0},
+        {0, 1, 1}
+    };
+    cout << "Example 1: " << spread(forest1) << endl;
+
+    // Example 2: expected output -1
+    vector<vector<int>> forest2 = {
+        {2, 1, 1},
+        {0, 1, 1},
+        {1, 0, 0}
+    };
+    cout << "Example 2: " << spread(forest2) << endl;
+
+    // Example 3: expected output 0
+    vector<vector<int>> forest3 = {
+        {0, 2}
+    };
+    cout << "Example 3: " << spread(forest3) << endl;
+
+    return 0;
+}
